@@ -1,0 +1,278 @@
+/* Temas globales (Configuración → Apariencia).
+   Se activan con <html data-theme="classic|fc|pes"> y sólo redefinen variables y unas pocas superficies,
+   así que toda la interfaz cambia a la vez. El tema «classic» es el de theme.css (sin overrides). */
+
+:root {
+  --radius: 2px;
+  --pitch-a: #11301f;
+  --pitch-b: #14382a;
+  --pitch-line: rgba(255, 255, 255, 0.34);
+  --pitch-edge: rgba(255, 255, 255, 0.18);
+  --chip-bg: linear-gradient(160deg, #222733, #12151c);
+  --chip-border: rgba(255, 255, 255, 0.22);
+  --chip-ink: #ffffff;
+  --shadow: none;
+  --shadow-hard: none;
+  --head-shadow: none;
+}
+
+/* ───────── EA FC: cristal azul profundo, brillo esmeralda, esquinas redondeadas ───────── */
+:root[data-theme='fc'] {
+  --bg: #060a14;
+  --bg-1: #0a1120;
+  --panel: #0e1629;
+  --panel-2: #15213b;
+  --panel-3: #1d2d51;
+  --line: #1c2845;
+  --line-2: #2b3c63;
+  --text: #ecf3ff;
+  --dim: #a1b3d4;
+  --faint: #6b7fa6;
+  --accent: #2fe3a0;
+  --accent-ink: #03150e;
+  --radius: 12px;
+  --pitch-a: #0a3b2a;
+  --pitch-b: #0d4632;
+  --chip-bg: linear-gradient(155deg, rgba(30, 41, 59, 0.98), rgba(2, 6, 23, 0.98));
+  --chip-border: rgba(148, 163, 184, 0.32);
+  --shadow: 0 18px 40px -26px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+:root[data-theme='fc'] body {
+  background:
+    radial-gradient(90% 60% at 0% 0%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
+    radial-gradient(70% 60% at 100% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 60%),
+    radial-gradient(80% 80% at 50% 110%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+}
+:root[data-theme='fc'] .panel,
+:root[data-theme='fc'] .modal,
+:root[data-theme='fc'] .toast,
+:root[data-theme='fc'] .preset,
+:root[data-theme='fc'] .pcard {
+  border-radius: var(--radius);
+}
+:root[data-theme='fc'] .panel {
+  background: linear-gradient(165deg, rgba(23, 34, 58, 0.78), rgba(10, 17, 32, 0.92));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+:root[data-theme='fc'] .panel-h {
+  background: linear-gradient(90deg, rgba(47, 227, 160, 0.1), transparent 70%);
+}
+:root[data-theme='fc'] .btn,
+:root[data-theme='fc'] .chip,
+:root[data-theme='fc'] .tag,
+:root[data-theme='fc'] .lang-btn,
+:root[data-theme='fc'] input,
+:root[data-theme='fc'] select,
+:root[data-theme='fc'] textarea {
+  border-radius: 9px;
+}
+:root[data-theme='fc'] .btn {
+  background: linear-gradient(180deg, rgba(51, 65, 99, 0.7), rgba(21, 33, 59, 0.95));
+}
+:root[data-theme='fc'] .btn.primary,
+:root[data-theme='fc'] .btn-go {
+  background: linear-gradient(180deg, #34e8a8, #17b97d);
+}
+:root[data-theme='fc'] .tbl th {
+  background: #0b1324;
+}
+:root[data-theme='fc'] .masthead {
+  background:
+    linear-gradient(100deg, color-mix(in srgb, var(--club-1, #1d3a66) 42%, transparent) 0%, transparent 52%),
+    linear-gradient(180deg, #0c1527, #09101e);
+}
+:root[data-theme='fc'] .tab-btn.on::after {
+  border-radius: 3px;
+  box-shadow: 0 0 14px var(--accent);
+}
+
+/* ───────── PES 6: azul arcade retro, sombras duras, resaltes amarillos ───────── */
+:root[data-theme='pes'] {
+  --bg: #001552;
+  --bg-1: #00206f;
+  --panel: #0b36a6;
+  --panel-2: #1450cf;
+  --panel-3: #2a6bf0;
+  --line: #4f7ce0;
+  --line-2: #9dbdff;
+  --text: #ffffff;
+  --dim: #d0e0ff;
+  --faint: #93b2f5;
+  --accent: #ffee55;
+  --accent-ink: #001a55;
+  --good: #7dff9a;
+  --bad: #ff7676;
+  --warn: #ffd24a;
+  --gold: #ffee55;
+  --radius: 0px;
+  --pitch-a: #0a8f38;
+  --pitch-b: #0c9a3d;
+  --pitch-line: #ffffff;
+  --pitch-edge: #ffffff;
+  --chip-bg: #c8c8c8;
+  --chip-border: #000000;
+  --chip-ink: #111111;
+  --shadow-hard: 4px 4px 0 #000;
+  --head-shadow: 2px 2px 0 #001040;
+}
+:root[data-theme='pes'] body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(0deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 100% 8px, 8px 100%;
+}
+:root[data-theme='pes'] .panel {
+  border: 2px solid var(--line-2);
+  box-shadow: var(--shadow-hard);
+  background: linear-gradient(180deg, #0f40b8, #0a2f94);
+}
+:root[data-theme='pes'] .panel-h {
+  background: linear-gradient(180deg, #4a7cf0, #2a58cc);
+  border-bottom: 2px solid var(--line-2);
+}
+:root[data-theme='pes'] .panel-h h3,
+:root[data-theme='pes'] .view-head h1,
+:root[data-theme='pes'] .mast-club .name,
+:root[data-theme='pes'] .tab-btn,
+:root[data-theme='pes'] .subtab {
+  text-shadow: var(--head-shadow);
+}
+:root[data-theme='pes'] .btn {
+  background: #4477dd;
+  border: 2px solid #e8e8e8;
+  box-shadow: 2px 2px 0 #000;
+  text-shadow: var(--head-shadow);
+}
+:root[data-theme='pes'] .btn:hover {
+  background: #5a8cf0;
+  border-color: #fff;
+}
+:root[data-theme='pes'] .btn.on,
+:root[data-theme='pes'] .btn.acc,
+:root[data-theme='pes'] .btn.primary {
+  background: #ffee55;
+  color: #001a55;
+  border-color: #fff;
+  text-shadow: none;
+}
+:root[data-theme='pes'] .masthead {
+  background: linear-gradient(180deg, #2a58cc, #0b2f9a);
+  border-bottom: 3px solid #e8e8e8;
+}
+:root[data-theme='pes'] .masthead::before {
+  display: none;
+}
+:root[data-theme='pes'] .tabbar {
+  background: #001a66;
+  border-bottom: 2px solid #e8e8e8;
+}
+:root[data-theme='pes'] .tab-btn.on {
+  background: #ffee55;
+  color: #001a55;
+  text-shadow: none;
+}
+:root[data-theme='pes'] .tab-btn.on::after {
+  display: none;
+}
+:root[data-theme='pes'] .btn-go {
+  clip-path: none;
+  border: 2px solid #fff;
+  box-shadow: 3px 3px 0 #000;
+}
+:root[data-theme='pes'] .tbl th {
+  background: #082a85;
+  color: #cfe0ff;
+}
+:root[data-theme='pes'] .tbl td {
+  border-bottom-color: rgba(157, 189, 255, 0.25);
+}
+:root[data-theme='pes'] input,
+:root[data-theme='pes'] select,
+:root[data-theme='pes'] textarea {
+  background: #00206f;
+  border: 2px solid var(--line-2);
+}
+:root[data-theme='pes'] .modal {
+  border: 3px solid #fff;
+  box-shadow: 8px 8px 0 #000;
+}
+
+/* ───────── Campo (compartido por la pizarra y la ficha del jugador) ───────── */
+:root[data-pitch='plain'] {
+  --pitch-b: var(--pitch-a);
+}
+:root[data-pitch='night'] {
+  --pitch-a: #04170f;
+  --pitch-b: #062014;
+  --pitch-line: rgba(190, 230, 255, 0.4);
+}
+:root[data-theme='pes'][data-pitch='night'] {
+  --pitch-a: #035c20;
+  --pitch-b: #04672a;
+}
+
+/* ───────── Pantallas estrechas ───────── */
+@media (max-width: 900px) {
+  .masthead {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+  .masthead > * {
+    min-width: 0;
+  }
+  .mast-right {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .date .d {
+    font-size: 18px;
+  }
+  .btn-go {
+    font-size: 17px;
+    padding: 9px 20px 9px 16px;
+  }
+  .main {
+    padding: 12px 12px 30px;
+  }
+}
+
+/* ───────── Densidad compacta ───────── */
+:root[data-density='compact'] .main {
+  padding: 12px 14px 28px;
+}
+:root[data-density='compact'] .panel-b {
+  padding: 8px;
+}
+:root[data-density='compact'] .tbl td {
+  padding: 2px 8px;
+  height: 26px;
+}
+:root[data-density='compact'] .tbl th {
+  padding: 4px 8px;
+}
+:root[data-density='compact'] .view-head {
+  margin-bottom: 8px;
+}
+:root[data-density='compact'] .view-head h1 {
+  font-size: 28px;
+}
+:root[data-density='compact'] .grid {
+  gap: 8px;
+}
+
+/* ───────── Animaciones reducidas ───────── */
+:root[data-motion='off'] *,
+:root[data-motion='off'] *::before,
+:root[data-motion='off'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}

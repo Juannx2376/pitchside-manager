@@ -1,0 +1,27 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+data/raw/
+data/imports/*.json
+!data/imports/.gitkeep
+.env
+
+.android-tools/
+apps/web/android/.gradle/
+apps/web/android/build/
+apps/web/android/app/build/
+apps/web/android/local.properties
+release/
+.tools/
+
+# Local / generated / third-party (never commit)
+/data/
+apps/web/public/data/world-db.json
+dist-public/
+release/
+playwright-report/
+apps/web/e2e/html-report/
+apps/web/e2e/test-results/
+.claude/
+.env.local

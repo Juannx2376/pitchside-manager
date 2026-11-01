@@ -1,0 +1,25 @@
+{
+  "name": "pitchside",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Pitchside — mánager de fútbol mundial (motores TypeScript + UI React)",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @pitchside/web",
+    "build": "npm run build -w @pitchside/web",
+    "build:public": "npm run build:public -w @pitchside/web",
+    "e2e": "npm run e2e -w @pitchside/web",
+    "test": "npm run test -w @pitchside/core",
+    "typecheck": "npm run typecheck -w @pitchside/core && npm run typecheck -w @pitchside/web",
+    "sim": "npm run sim -w @pitchside/core --",
+    "fetch:apifootball": "npm run fetch:apifootball -w @pitchside/core --",
+    "apk": "powershell -ExecutionPolicy Bypass -File scripts/build-apk.ps1"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "esbuild@0.21.5": true
+  }
+}
