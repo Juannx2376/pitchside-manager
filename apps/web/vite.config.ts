@@ -23,6 +23,8 @@ function stripThirdPartyData(): Plugin {
 }
 
 export default defineConfig(({ mode }) => ({
+  // `VITE_BASE` lets the same build be served from a sub-path (e.g. GitHub Pages: /pitchside-manager/).
+  base: process.env.VITE_BASE || '/',
   plugins: [react(), ...(mode === 'public' ? [stripThirdPartyData()] : [])],
   server: { port: 5173 },
 }));
