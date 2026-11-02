@@ -14,9 +14,6 @@
   overflow: hidden;
   user-select: none;
 }
-:root[data-pitch='night'] .pitch-v {
-  box-shadow: inset 0 0 90px rgba(120, 180, 255, 0.09);
-}
 .pitch-lines {
   position: absolute;
   inset: 0;

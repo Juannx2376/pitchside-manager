@@ -211,8 +211,8 @@
 .rp-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
 .rp-dot { position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; border: 2px solid #fff; font-size: 9px; font-weight: 800; color: #fff; display: grid; place-items: center; text-shadow: 0 1px 2px #000; transition: left 0.62s ease-in-out, top 0.62s ease-in-out; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); }
 .rp-dot.away { opacity: 0.92; }
-.rp-dot.carrier { box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.9), 0 0 14px rgba(255, 235, 59, 0.8); z-index: 3; }
-.rp-ball { position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px #111, 0 0 10px rgba(255, 255, 255, 0.9); transition: left 0.62s ease-in-out, top 0.62s ease-in-out; z-index: 4; }
+.rp-dot.carrier { box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.95); z-index: 3; }
+.rp-ball { position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px #111; transition: left 0.62s ease-in-out, top 0.62s ease-in-out; z-index: 4; }
 .rp-trail { position: absolute; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #fff; z-index: 2; }
 .rp-banner { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); padding: 6px 16px; border-radius: 8px; font-weight: 900; font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; z-index: 6; animation: revPop 0.4s cubic-bezier(0.2, 1.4, 0.4, 1); background: rgba(0, 0, 0, 0.78); color: #fff; white-space: nowrap; }
 .rp-banner.goal { background: rgba(0, 210, 122, 0.92); color: #04120a; }

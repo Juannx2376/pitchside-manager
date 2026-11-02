@@ -367,9 +367,16 @@ export function setSeasonBudgets(club: Club, players: Player[], tier: number, ho
   const regime = FPF_REGIMES[country.confederation];
   const revenue = estimateSeasonRevenue(club, country, tier, homeGames);
   const fin = club.finances;
+  // Un club de la IA embargado reestructura su masa salarial: sin esto se quedaba años atascado sobre el límite del FPF.
+  if (!club.isUser && fin.fpf.transferEmbargo) {
+    for (const p of players) if (p.contract) p.contract.wage = Math.round(p.contract.wage * AI_EMBARGO_WAGE_CUT);
+  }
   const currentWages = weeklyWageBill(players, club.id);
   const staff = weeklyStaffWages(club, country);
-  const maxWeekly = (revenue * regime.squadCostRatio * 0.92) / 52 - staff;
+  // El FPF cuenta salarios + amortización de fichajes: el presupuesto salarial descuenta lo que ya se debe amortizar.
+  const lastSeason = fin.history[fin.history.length - 1];
+  const amortization = lastSeason ? lastSeason.ledger.playerPurchases / 3 : 0;
+  const maxWeekly = (revenue * regime.squadCostRatio * 0.92 - amortization) / 52 - staff;
   fin.wageBudget = roundMoney(Math.max(currentWages * 1.02, maxWeekly));
   const fixedCosts = (currentWages + staff + weeklyStadiumCost(club, country) + weeklyYouthCost(club, country)) * 52;
   const loans = (club.loans ?? []).reduce((s, l) => s + l.weeklyPayment * Math.min(52, l.weeksLeft), 0);
@@ -382,9 +389,24 @@ export function setSeasonBudgets(club: Club, players: Player[], tier: number, ho
   // con un tope para que la caja no se infle sin fin.
   const carry = (fin.transferBudget ?? 0) * SEASON_CARRY;
   const prize = (fin.history[fin.history.length - 1]?.ledger.prizeMoney ?? 0) * PRIZE_REINVEST;
-  const cap = Math.max(base, fin.balance > 0 ? fin.balance * 0.7 : 0);
-  fin.transferBudget = fin.fpf.transferEmbargo ? 0 : roundMoney(Math.min(base + carry + prize, cap));
+  // Los clubes de la IA con la caja en rojo reciben una inyección del propietario: sin ella quedaban
+  // sin presupuesto de fichajes para siempre y las divisiones bajas se estancaban.
+  if (!club.isUser && fin.balance < 0) fin.balance = Math.round(revenue * OWNER_BAILOUT);
+  // El tope sigue a la caja pero nunca supera una fracción de los ingresos: sin esto los grandes acumulaban cientos de millones.
+  const cap = Math.min(Math.max(base, fin.balance > 0 ? fin.balance * 0.7 : 0), revenue * BUDGET_REVENUE_CAP);
+  // Un club con caja sana siempre puede mover una pequeña parte de sus ingresos.
+  const floor = fin.balance >= 0 ? revenue * BUDGET_FLOOR : 0;
+  fin.transferBudget = fin.fpf.transferEmbargo ? 0 : roundMoney(Math.max(floor, Math.min(base + carry + prize, cap)));
 }
+
+/** Factor aplicado a los salarios de un club de la IA embargado al empezar la temporada. */
+export const AI_EMBARGO_WAGE_CUT = 0.92;
+/** Techo del presupuesto de fichajes como fracción de los ingresos anuales previstos. */
+export const BUDGET_REVENUE_CAP = 0.9;
+/** Mínimo del presupuesto de fichajes (fracción de ingresos) para un club con la caja en positivo. */
+export const BUDGET_FLOOR = 0.06;
+/** Caja con la que el propietario rescata a un club de la IA que termina la temporada en negativo. */
+export const OWNER_BAILOUT = 0.08;
 
 /** Parte del presupuesto de fichajes sin gastar que pasa a la temporada siguiente. */
 export const SEASON_CARRY = 0.6;

@@ -375,6 +375,9 @@ function initialFamiliarity(rng: Rng, p: Player): Record<TacticalStyle, number> 
   return res;
 }
 
+/** Cuánto por debajo de la calidad del país queda, de media, el potencial de un canterano (calibrado con `scripts/econSim.ts`). */
+export const REGEN_POTENTIAL_OFFSET = 3;
+
 /** Juvenil generado por la cantera: hereda el nivel y el perfil del país. */
 export function generateRegen(
   rng: Rng,
@@ -388,7 +391,7 @@ export function generateRegen(
   const { country } = opts;
   // El techo del juvenil gira alrededor de la calidad del país; las instalaciones lo empujan.
   // La mayoría de canteranos no llegan al nivel del primer equipo; unos pocos lo superan.
-  let potential = country.quality - 11 + rng.gauss(0, 8) + (opts.youthRecruitment - 50) * 0.08 + (opts.youthFacilities - 50) * 0.06;
+  let potential = country.quality - REGEN_POTENTIAL_OFFSET + rng.gauss(0, 8) + (opts.youthRecruitment - 50) * 0.08 + (opts.youthFacilities - 50) * 0.06;
   if (rng.chance(0.012 + country.quality / 5000)) potential += rng.float(10, 20); // "wonderkid"
   potential = clamp(potential, 30, 96);
   const quality = clamp(potential - rng.float(18, 30), 22, 70);

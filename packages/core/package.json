@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "sim": "tsx scripts/sim.ts",
+    "econ": "tsx scripts/econSim.ts",
     "fetch:apifootball": "tsx scripts/fetchApiFootball.ts"
   },
   "devDependencies": {

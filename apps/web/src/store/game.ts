@@ -20,7 +20,10 @@ import {
   Rng,
   startEnquiry,
   startNegotiation,
+  playerExpectations,
   prepareUserMatch,
+  queueBid,
+  queueContract,
   quickSimUserMatch,
   serializeGame,
   setLocale,
@@ -475,6 +478,47 @@ if (import.meta.env.DEV) {
       if (!g) return;
       resign(g, new Rng(1));
       useGame.getState().touch();
+    },
+    /** Estado de la negociación de un jugador (pruebas del flujo de fichajes por fases). */
+    negotiation: (playerId: string) => {
+      const g = useGame.getState().game;
+      const n = g?.userClubId ? Object.values(g.negotiations).find((x) => x.playerId === playerId && x.buyerClubId === g.userClubId) : null;
+      if (!g || !n) return null;
+      const p = g.players[playerId];
+      // Mientras se espera la respuesta, la oferta viaja en `awaiting`; al resolverse pasa a `bid` / `contract`.
+      const bid = n.awaiting?.bid ?? n.bid;
+      const contract = n.awaiting?.offer ?? n.contract;
+      return {
+        stage: n.stage,
+        awaiting: n.awaiting?.kind ?? null,
+        playerAgreed: !!n.playerAgreed,
+        hasCounter: !!n.sellerCounter,
+        bid: bid ? { fee: bid.fee, instalments: bid.instalments ?? 1, bonus: bid.bonus ?? 0 } : null,
+        contract: contract ? { wage: contract.wage, years: contract.years, role: contract.role ?? null, appearanceBonus: contract.appearanceBonus ?? 0 } : null,
+        playerClub: p.clubId,
+        day: g.day,
+        commitments: g.userClubId ? (g.clubs[g.userClubId].finances.commitments ?? []).length : 0,
+      };
+    },
+    /** Fase 2: oferta al club (precio de mercado + cuotas + prima) usando su contraoferta si la hay. */
+    bidClub: (playerId: string) => {
+      const g = useGame.getState().game;
+      const n = g?.userClubId ? Object.values(g.negotiations).find((x) => x.playerId === playerId && x.buyerClubId === g.userClubId) : null;
+      if (!g || !n) return false;
+      const base = n.sellerCounter ? n.sellerCounter.fee : Math.round(playerValue(g, g.players[playerId]) * 1.25);
+      const r = queueBid(g, n.id, { fee: base, sellOnPercent: 0, instalments: 2, bonus: Math.round(base * 0.05), entry: 'now' });
+      useGame.getState().touch();
+      return r.queued;
+    },
+    /** Fase 3: contrato al jugador con rol y prima por aparición, en el salario que pide. */
+    offerContract: (playerId: string) => {
+      const g = useGame.getState().game;
+      const n = g?.userClubId ? Object.values(g.negotiations).find((x) => x.playerId === playerId && x.buyerClubId === g.userClubId) : null;
+      if (!g || !n || !g.userClubId) return false;
+      const ex = playerExpectations(g, g.players[playerId], g.clubs[g.userClubId]);
+      const r = queueContract(g, n.id, { wage: Math.round(ex.idealWage * 1.15), years: Math.max(3, ex.years), releaseClause: null, goalBonus: 0, cleanSheetBonus: 0, signingBonus: 0, agentFee: ex.agentFee, role: 'rotation', appearanceBonus: 2000, autoRaisePct: 10, autoCutPct: 10 });
+      useGame.getState().touch();
+      return r.queued;
     },
     /** Avanza N días con el partido propio auto-jugado. */
     advance: (days: number) => {

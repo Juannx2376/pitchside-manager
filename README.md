@@ -6,7 +6,9 @@
 
 211 national federations · full league pyramids · staged transfers · live Deadline Day · tactics board with 27 positions · youth academy · four languages
 
-[Features](#features) · [Screenshots](#screenshots) · [Quick start](#quick-start) · [Documentation](#documentation) · [Project layout](#project-layout) · [Data & legal](#data--legal-notice)
+**[▶ Play the demo](https://juannx2376.github.io/pitchside-manager/)** (runs in your browser, no install; generated world, no third-party data)
+
+[Features](#features) · [Screenshots](#screenshots) · [Quick start](#quick-start) · [Engineering](#engineering-determinism-balance-and-tests) · [Documentation](#documentation) · [Project layout](#project-layout) · [Data & legal](#data--legal-notice)
 
 </div>
 
@@ -119,9 +121,39 @@ Useful commands (from the repo root):
 | `npm run e2e -w @pitchside/web` | Playwright end-to-end tests (starts its own Vite on :5273) |
 | `npm run build` / `npm run build:public` | Production build / build without third-party data |
 | `npm run sim -- --seasons 1 --user ENG` | Headless season simulation from the CLI |
+| `npm run econ -w @pitchside/core -- --seasons 10 --countries ESP,COL,ENG` | Headless economy/balance report (budgets, cash, wages, squad quality per tier) |
 
 Without the optional real-world database the game starts with a **fully generated world** (names, clubs and
 squads are procedural). See [docs/DATA.md](docs/DATA.md) to build or plug in your own database.
+
+## Engineering: determinism, balance and tests
+
+**Deterministic by construction.** All randomness goes through a seeded `Rng` (mulberry32) stored in the game
+state; `Math.random` is never used in the core. The same seed always produces the same world, the same
+season and the same transfer market, and the tests assert it. The state is one flat object of `Record<Id, T>`
+collections, so saves stay small and migrations are explicit (`CURRENT_SAVE_VERSION` + `migrateState`).
+
+**Balance is measured, not guessed.** `packages/core/scripts/econSim.ts` plays 5–10 full seasons headlessly across
+several countries and prints, per league tier, the median / p10 / p90 of transfer budget, cash, revenue and wages,
+the share of clubs with no budget, in FPF embargo or in the red, and the average squad rating by age. Running it
+exposed two long-term problems, now fixed and covered by `test/economy.test.ts`:
+
+- *Money.* Top-tier budgets inflated without limit while lower divisions stalled at zero. The transfer budget is now
+  capped at a fraction of expected revenue, clubs with healthy cash keep a small floor, AI clubs in the red get an
+  owner bailout, the wage budget accounts for transfer amortisation (what FPF actually counts) and embargoed AI
+  clubs restructure their wage bill instead of staying stuck for years.
+- *Talent.* Academy graduates were generated below the level of the veterans they replaced, so every league lost
+  rating each year (a top tier fell from 72.5 to 61 over eight seasons). The intake is recalibrated and league
+  quality now stays flat (about 66–68) over ten seasons.
+
+**Tests.**
+
+| Suite | Scope |
+| --- | --- |
+| Vitest (`packages/core/test`) | Engines, rules and the economy; seeded and reproducible |
+| Playwright (`apps/web/e2e`) | Tactics board, hooks, text-overflow audit (1280/1024/390 px, en/es/ru), the staged transfer flow (enquiry → club → player → close, with instalments, bonus and contract clauses) and the live Deadline Day clock |
+| `scripts/checkUiKeys.ts`, `i18n.test.ts` | Every UI key exists in all four languages with matching placeholders |
+| `scripts/auditI18n.ts` | Flags strings left identical to English |
 
 ## Documentation
 

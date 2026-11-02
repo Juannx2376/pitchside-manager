@@ -20,7 +20,10 @@ Pitchside — a football manager. npm-workspaces monorepo, no backend: pure-TS e
 - `npm run build` (web `dist/`) / `npm run build:public` (`dist-public/`)
 - Single test: `npm run test -w @pitchside/core -- test/engines.test.ts` (or `npx vitest run <file>` inside `packages/core`)
 
-There is **no ESLint / Prettier / CI** configured. `typecheck` is the only gate, and it is strict: `noUnusedLocals` / `noUnusedParameters` make unused vars fail — and `npm run build` runs that typecheck first for both packages.
+- `npm run econ -w @pitchside/core -- --seasons 10 --countries ESP,COL,ENG --seed 7 --db no` — headless economy/balance report (`scripts/econSim.ts`). Re-run it after touching `finance.ts: setSeasonBudgets` (constants `BUDGET_REVENUE_CAP`, `BUDGET_FLOOR`, `OWNER_BAILOUT`, `AI_EMBARGO_WAGE_CUT`) or `player.ts: REGEN_POTENTIAL_OFFSET`; `test/economy.test.ts` pins the rules.
+- `npx tsx scripts/auditI18n.ts` (cwd `packages/core`) lists es/pt/ru strings identical to English.
+
+There is **no ESLint / Prettier** configured (GitHub Actions runs typecheck, tests, build and e2e). `typecheck` is the only local gate, and it is strict: `noUnusedLocals` / `noUnusedParameters` make unused vars fail — and `npm run build` runs that typecheck first for both packages.
 
 ## Core scripts and paths
 
